@@ -8,11 +8,7 @@
 <body>
     <form action="/" method="POST">
         {% csrf_token %}
-        {% if has_error %}
-            <p>Invalid Form, Enter the requested information!</p>
-        {% endif %}
-        <label for="username">Username: </label>
-        <input id="username" name="username" type="text">
+        {{ form }}
         <button>Send</button>
     </form>
 </body>
