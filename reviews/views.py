@@ -17,8 +17,8 @@ def review(request):
         if form.is_valid():
             print(form.cleaned_data)
             return HttpResponseRedirect("/thank-you")
-
-    form = RForm()
+    else:
+        form = RForm()
 
     return render(request, "reviews/review.html",
         {"form": form
