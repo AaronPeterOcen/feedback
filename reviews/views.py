@@ -2,12 +2,13 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from reviews.models import Review
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views.generic import DetailView
+from django.views.generic.edit import FormView, CreateView
 
 
 from .forms import ReviewForm
@@ -15,20 +16,29 @@ from .forms import ReviewForm
 # Create your views here.
 
 
-class ReviewView(View):
-    def get(self, request):
-        form = ReviewForm()
+class ReviewView(CreateView):
+    # form_class = ReviewForm
+    model = Review
+    fields = "__all__"
+    template_name = "reviews/review.html"
+    success_url = "/thank-you"
 
-        return render(request, "reviews/review.html", {"form": form})
+    # def form_valid(self, form):
+    #     form.save()        
+    #     return super().form_valid(form)
 
-    def post(self, request):
-        form = ReviewForm(request.POST)
+    # def get(self, request):
+    #     form = ReviewForm()
+    #     return render(request, "reviews/review.html", {"form": form})
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/thank-you")
+    # def post(self, request):
+    #     form = ReviewForm(request.POST)
 
-        return render(request, "reviews/review.html", {"form": form})
+    #     if form.is_valid():
+    #         form.save()
+    #         return HttpResponseRedirect("/thank-you")
+
+    #     return render(request, "reviews/review.html", {"form": form})
 
 
 class ThankYouView(TemplateView):
