@@ -1,9 +1,13 @@
+# from typing import Any
 from typing import Any
+from django.db.models.query import QuerySet
 from reviews.models import Review
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView
+from django.views.generic import DetailView
 
 
 from .forms import ReviewForm
@@ -26,24 +30,41 @@ class ReviewView(View):
 
         return render(request, "reviews/review.html", {"form": form})
 
+
 class ThankYouView(TemplateView):
     template_name = "reviews/thank_you.html"
-    
-    def get_context_data(self, **kwargs):
-        context =  super().get_context_data(**kwargs)
-        context['message'] = "Working!!"
-        return context
 
-
-class ReviesListView(TemplateView):
-    template_name = "reviews/review_list.html"
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        reviews = Review.objects.all()
-        context["reviews"] = reviews
+        context["message"] = "Working!!"
         return context
 
+
+class ReviesListView(ListView):
+    template_name = "reviews/review_list.html"
+    model = Review
+    context_object_name = "reviews"
+
+    # to narrow down the query
+    # def get_queryset(self):
+    #     base_query = super().get_queryset()
+    #     data = base_query.filter(rating__gte=4)
+    #     return data
+
+
+class SingleRevView(DetailView):
+    template_name = "reviews/single_review.html"
+    model = Review
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     review_id = kwargs["id"]
+    #     # reviews = Review.objects.all()
+    #     selected_review = Review.objects.get(pk=review_id)
+    #     context["review"] = selected_review
+    #     return context
+
+
 # def thank_you(request):
-    # def get(self, request):
-    #     return render(request, "reviews/thank_you.html")
+# def get(self, request):
+#     return render(request, "reviews/thank_you.html")
